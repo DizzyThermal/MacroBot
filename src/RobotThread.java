@@ -10,6 +10,7 @@ public class RobotThread extends Thread
 	private String commandString;
 	private boolean running;
 	private ArrayList<Integer> keys;
+	private boolean intenseShutdown = false;
 	
 	private int SHIFT = -1;
 	
@@ -55,10 +56,78 @@ public class RobotThread extends Thread
     public void shutdown()
     {
     	running = false;
+    	releaseAllKeys();
     	if(keys != null)
     		keys.clear();
     	robot = null;
     	this.stop();
+    }
+    
+    private void releaseAllKeys()
+    {
+    	if(robot == null)
+    		return;
+
+    	if(!intenseShutdown)
+    	{
+    		for(int i = 0; i < keys.size(); i++)
+    			robot.keyRelease(keys.get(i));
+    	}
+    	else
+    	{
+	    	// Release 0-9
+	    	for(int i = 48; i < 57; i++)
+	    		robot.keyRelease(i);
+	    	
+	    	// Release A-Z
+	    	for(int i = 65; i < 90; i++)
+	    		robot.keyRelease(i);
+	    	
+	    	robot.keyRelease(18);
+	    	robot.keyRelease(192);
+	    	robot.keyRelease(92);
+	    	robot.keyRelease(8);
+	    	robot.keyRelease(20);
+	    	robot.keyRelease(93);
+	    	robot.keyRelease(44);
+	    	robot.keyRelease(17);
+	    	robot.keyRelease(127);
+	    	robot.keyRelease(40);
+	    	robot.keyRelease(61);
+	    	robot.keyRelease(35);
+	    	robot.keyRelease(112);
+	    	robot.keyRelease(113);
+	    	robot.keyRelease(114);
+	    	robot.keyRelease(115);
+	    	robot.keyRelease(116);
+	    	robot.keyRelease(117);
+	    	robot.keyRelease(118);
+	    	robot.keyRelease(119);
+	    	robot.keyRelease(120);
+	    	robot.keyRelease(121);
+	    	robot.keyRelease(122);
+	    	robot.keyRelease(123);
+	    	robot.keyRelease(36);
+	    	robot.keyRelease(155);
+	    	robot.keyRelease(37);
+	    	robot.keyRelease(45);
+	    	robot.keyRelease(144);
+	    	robot.keyRelease(91);
+	    	robot.keyRelease(34);
+	    	robot.keyRelease(33);
+	    	robot.keyRelease(46);
+	    	robot.keyRelease(154);
+	    	robot.keyRelease(222);
+	    	robot.keyRelease(39);
+	    	robot.keyRelease(145);
+	    	robot.keyRelease(59);
+	    	robot.keyRelease(16);
+	    	robot.keyRelease(47);
+	    	robot.keyRelease(32);
+	    	robot.keyRelease(9);
+	    	robot.keyRelease(38);
+	    	robot.keyRelease(524);
+    	}
     }
     
 	private ArrayList<Integer> getKeyCodes(String input)
@@ -223,6 +292,8 @@ public class RobotThread extends Thread
 				keys.add(KeyEvent.VK_SCROLL_LOCK);
 			else if(inputStr.toLowerCase().equals("numlock"))
 				keys.add(KeyEvent.VK_NUM_LOCK);
+			else if(inputStr.toLowerCase().equals("backspace"))
+				keys.add(KeyEvent.VK_BACK_SPACE);
 			else if(inputStr.toLowerCase().equals("`"))
 				keys.add(KeyEvent.VK_BACK_QUOTE);
 			
